@@ -1,16 +1,13 @@
-import Container from "@/components/global/Container";
-import RootLayout from "@/components/global/RootLayout";
-
-import Hero from "@/components/pages/home/Hero";
-
 import client from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import { PreviewSuspense } from "next-sanity/preview";
 import { usePreview } from "@/sanity/lib/preview";
-
 import ExitPreview from "@/components/sanity/ExitPreview";
-
 import PreviewLoading from "@/components/sanity/PreviewLoading";
+
+import Container from "@/components/global/Container";
+import RootLayout from "@/components/global/RootLayout";
+import Hero from "@/components/pages/home/Hero";
 
 const query = groq`*[_type == "homePage"][0]{
   title,
@@ -43,6 +40,7 @@ export default function Home({ preview, data }) {
     </RootLayout>
   );
 }
+
 function HomePage({ data }) {
   return (
     <>
@@ -62,29 +60,3 @@ function PreviewHomePage({ query }) {
     </>
   );
 }
-
-// function Featured() {
-//   const [selected, setSelected] = useState(1);
-
-//   return (
-//     <div className="flex items-end justify-center -space-x-8 py-32">
-//       {Array(3)
-//         .fill()
-//         .map((_, i) => (
-//           <div
-//             key={i}
-//             onClick={() => setSelected(i)}
-//             className={`${
-//               selected === i
-//                 ? "z-10 scale-125"
-//                 : `z-0 scale-95 hover:scale-100 ${
-//                     selected > i ? "-rotate-6" : "rotate-6"
-//                   }`
-//             } cursor-pointer transition-all transform`}
-//           >
-//             <EventCard />
-//           </div>
-//         ))}
-//     </div>
-//   );
-// }
