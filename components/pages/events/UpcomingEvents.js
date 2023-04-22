@@ -5,12 +5,22 @@ import TextTransition, { presets } from "react-text-transition";
 import { generateDates } from "@/utils/dates";
 import { generateColors } from "@/utils/colors";
 
+import { VideoCameraIcon } from "@heroicons/react/20/solid";
+
 import { useBreakpoint } from "@/utils/responsive";
 
 import dynamic from "next/dynamic";
 const EventCard = dynamic(() => import("@/components/cards/EventCard"));
 
-export default function UpcomingEvents({ data }) {
+import useSWR from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+import Pills from "./Pills";
+
+export default function UpcomingEvents({ ignore = [] }) {
+  const { data, error, isLoading } = useSWR("/api/events/upcoming", fetcher);
+
   const [selected, setSelected] = useState({});
   const [size, setSize] = useState([0, 0]);
   const [distance, setDistance] = useState(0);
@@ -40,11 +50,12 @@ export default function UpcomingEvents({ data }) {
       >
         {selected.content ? (
           <div className="space-y-4">
-            <div className="flex items-center justify-start space-x-2">
-              <Pill>Workshop</Pill>
-              <Pill>Virtual</Pill>
-              <Pill>Free</Pill>
-            </div>
+            <Pills
+              tags={selected.content.tags}
+              virtual={selected.content.location?.virtual}
+              bg={selected.colors.light}
+              text={selected.colors.dark}
+            />
             <TextTransition springConfig={presets.slow}>
               <div className="space-y-1">
                 <h2 className="text-lg md:text-xl font-bold tracking-tight font-display leading-tight">
@@ -52,7 +63,7 @@ export default function UpcomingEvents({ data }) {
                 </h2>
 
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter font-display leading-tight">
-                  {selected.content}
+                  {selected.content.title}
                 </h2>
               </div>
             </TextTransition>
@@ -69,16 +80,36 @@ export default function UpcomingEvents({ data }) {
           paddingLeft: distance,
         }}
       >
-        {data.map((event, i) => (
-          <InteractiveEventCard
-            key={i}
-            setSelected={setSelected}
-            i={i}
-            distance={distance}
-            data={event}
-          />
-        ))}
+        {data && !error ? (
+          data.length > 0 ? (
+            data
+              .filter((e) => !ignore.includes(e.slug))
+              .map((event, i) => (
+                <InteractiveEventCard
+                  key={i}
+                  setSelected={setSelected}
+                  i={i}
+                  distance={distance}
+                  data={event}
+                />
+              ))
+          ) : (
+            <p>There are no upcoming events.</p>
+          )
+        ) : (
+          Array(8)
+            .fill()
+            .map((_, i) => <SkeletonEventCard key={i} />)
+        )}
       </div>
+    </div>
+  );
+}
+
+function SkeletonEventCard() {
+  return (
+    <div className="pr-4 md:pr-8 last:pr-0 first:pl-4 md:first:pl-0 pointer-events-none">
+      <div className="w-64 h-112 bg-white/5 shrink-0 shadow-2xl rounded-4xl border-2 border-white/5 animate-pulse"></div>
     </div>
   );
 }
@@ -100,9 +131,13 @@ function InteractiveEventCard({ data, i, setSelected }) {
           ? setSelected({
               colors: {
                 dark: colors["900"].color,
-                light: colors["500"].color,
+                light: colors["100"].color,
               },
-              content: data.title,
+              content: {
+                title: data.title,
+                tags: data.tags,
+                location: data.location,
+              },
               date: date.longest,
             })
           : null
@@ -112,14 +147,6 @@ function InteractiveEventCard({ data, i, setSelected }) {
       className="pr-4 md:pr-8 last:pr-0 first:pl-4 md:first:pl-0"
     >
       <EventCard data={data} colors={colors} date={date} />
-    </div>
-  );
-}
-
-function Pill({ children }) {
-  return (
-    <div className="text-xxs md:text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-widest border border-champagne/10 bg-champagne text-champagne-900">
-      {children}
     </div>
   );
 }

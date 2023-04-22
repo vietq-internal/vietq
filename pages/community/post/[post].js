@@ -12,7 +12,7 @@ import PostBar from "@/components/pages/community/post/PostBar";
 import PostBody from "@/components/pages/community/post/PostBody";
 import RecentPosts from "@/components/pages/community/post/RecentPosts";
 
-const query = groq`*[_type == "blogPost" && slug.current==$slug][0]{
+const query = groq`*[_type == "blogPost" && slug.current==$slug][0] {
   title,
   "slug": slug.current,
   "author": author->{
@@ -83,7 +83,7 @@ function PostPage({ data }) {
       <PostBar data={data} />
       <Container>
         <PostBody data={data} />
-        <RecentPosts />
+        <RecentPosts ignore={[data.slug]} />
       </Container>
     </>
   );

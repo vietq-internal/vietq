@@ -8,7 +8,11 @@ import PreviewLoading from "@/components/sanity/PreviewLoading";
 import RootLayout from "@/components/global/RootLayout";
 
 import Header from "@/components/pages/events/Header";
-import UpcomingEvents from "@/components/pages/events/UpcomingEvents";
+
+import dynamic from "next/dynamic";
+const UpcomingEvents = dynamic(() =>
+  import("@/components/pages/events/UpcomingEvents")
+);
 
 const query = groq`*[_type == "event" ] | order(dateRange.start asc) {
   title,
@@ -28,7 +32,7 @@ export async function getStaticProps({ preview = false }) {
     return { props: { preview } };
   }
 
-  const data = await client.fetch(query);
+  const data = null;
 
   return {
     props: { preview, data },
@@ -54,7 +58,7 @@ function EventsPage({ data }) {
   return (
     <>
       <Header />
-      <UpcomingEvents data={data} />
+      <UpcomingEvents />
     </>
   );
 }
