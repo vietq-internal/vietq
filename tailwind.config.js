@@ -1,4 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   content: [
@@ -10,8 +11,10 @@ module.exports = {
     extend: {
       transitionProperty: {
         background: "background",
+        zIndex: "z-index",
       },
       spacing: {
+        76: "19rem",
         112: "30rem",
         128: "32rem",
       },
@@ -26,6 +29,7 @@ module.exports = {
         "4xl": "2rem",
       },
       colors: {
+        // gray: colors.neutral,
         red: {
           DEFAULT: "#FB2647",
           50: "#FEDFE4",
@@ -77,8 +81,7 @@ module.exports = {
           600: "#1BC560",
           700: "#149348",
           800: "#0E6230",
-          900: "#073118",
-          950: "#03180C",
+          900: "#03180C",
         },
         blue: {
           DEFAULT: "#1857AF",
@@ -92,6 +95,19 @@ module.exports = {
           700: "#113E7E",
           800: "#0A264C",
           900: "#040D1B",
+        },
+        purple: {
+          DEFAULT: "#543694",
+          50: "#CEC2E9",
+          100: "#C2B3E3",
+          200: "#AA95D8",
+          300: "#9377CD",
+          400: "#7859C2",
+          500: "#6541B2",
+          600: "#543694",
+          700: "#3D276B",
+          800: "#251842",
+          900: "#0E0919",
         },
         champagne: {
           DEFAULT: "#FBE9D5",
