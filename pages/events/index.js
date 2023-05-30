@@ -7,15 +7,28 @@ import PreviewLoading from "@/components/sanity/PreviewLoading";
 import RootLayout from "@/components/global/RootLayout";
 
 import EventTypes from "@/components/pages/events/EventTypes";
-import Header from "@/components/pages/events/Header";
-import PastEvents from "@/components/pages/events/PastEvents";
 
 import dynamic from "next/dynamic";
 const UpcomingEvents = dynamic(() =>
   import("@/components/pages/events/UpcomingEvents")
 );
 
-const query = groq`*[_type == "eventPage"][0]`;
+const Header = dynamic(() => import("@/components/pages/events/Header"));
+
+const PastEvents = dynamic(() =>
+  import("@/components/pages/events/PastEvents")
+);
+
+const query = groq`*[_type == "eventsPage"][0] {
+  headerSection {
+    ...,
+    featuredPicture {
+      ...,
+      "lqip": asset->metadata.lqip,
+    },
+  },
+  eventTypes
+}`;
 
 export async function getStaticProps({ preview = false }) {
   if (preview) {
@@ -47,8 +60,8 @@ export default function Events({ preview, data }) {
 function EventsPage({ data }) {
   return (
     <>
-      <Header />
-      <EventTypes />
+      <Header data={data.headerSection} />
+      <EventTypes data={data.eventTypes} />
       <UpcomingEvents />
       <PastEvents />
     </>

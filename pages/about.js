@@ -7,20 +7,21 @@ import PreviewLoading from "@/components/sanity/PreviewLoading";
 import RootLayout from "@/components/global/RootLayout";
 
 import Mission from "@/components/pages/about/Mission";
-import News from "@/components/pages/about/News";
+// import News from "@/components/pages/about/News";
 import dynamic from "next/dynamic";
 const Team = dynamic(() => import("@/components/pages/about/Team"));
 const Summary = dynamic(() => import("@/components/pages/about/Summary"));
 const Header = dynamic(() => import("@/components/pages/about/Header"));
+const News = dynamic(() => import("@/components/pages/about/News"));
 
 const query = groq`*[_type == "aboutPage"][0] {
   ...,
   headerSection {
     ...,
     teamPicture {
-   ...,
-  "lqip": asset->metadata.lqip,
-  },
+      ...,
+    "lqip": asset->metadata.lqip,
+    },
   },
   "members": *[_type == "teamMember"] | order(orderRank) {
     name,

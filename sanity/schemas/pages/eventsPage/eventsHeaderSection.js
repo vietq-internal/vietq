@@ -1,30 +1,35 @@
 export default {
-  name: "homeHero",
-  title: "Home Hero",
+  name: "eventsHeaderSection",
+  title: "Events Header Section",
   type: "object",
   fields: [
     {
       name: "title",
       title: "Title",
       type: "string",
-      description: "The title shown on the hero banner.",
       validation: (Rule) => Rule.required(),
     },
     {
       name: "description",
       title: "Description",
-      description: "Description shown on the hero banner.",
       type: "text",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: "heroImage",
-      title: "Background Image",
-      description: "This background display on the hero banner.",
+      name: "featuredPicture",
+      title: "Featured Picture",
       type: "image",
       options: {
         hotspot: true,
       },
+      fields: [
+        {
+          name: "title",
+          title: "Title",
+          type: "string",
+          validation: (Rule) => Rule.required(),
+        },
+      ],
       validation: (Rule) => Rule.required(),
     },
   ],

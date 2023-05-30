@@ -6,6 +6,7 @@ import { HorizontalNavigation } from "./Navigation";
 
 import dynamic from "next/dynamic";
 const MobileNavigation = dynamic(() => import("./MobileNavigation"));
+const DonateModal = dynamic(() => import("./DonateModal"));
 
 import vietQWhite from "../../../public/logos/vietq_logo_white.png";
 import vietQBlack from "../../../public/logos/vietq_logo_black.png";
@@ -22,6 +23,7 @@ export default function Navbar({ transparent = false, preview = false }) {
   const past = position.y > 100;
 
   const [open, setOpen] = useState(false);
+  const [showDonate, setShowDonate] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -68,8 +70,8 @@ export default function Navbar({ transparent = false, preview = false }) {
               />
             </Link>
             <HorizontalNavigation noHome={true}>
-              <Link
-                href="/donate"
+              <button
+                onClick={() => setShowDonate(true)}
                 className={`${
                   transparent
                     ? past
@@ -79,7 +81,7 @@ export default function Navbar({ transparent = false, preview = false }) {
                 } uppercase tracking-widest text-xs rounded-full px-3.5 py-2 transition-colors font-semibold`}
               >
                 Donate
-              </Link>
+              </button>
             </HorizontalNavigation>
             <div className="md:hidden">
               <button
@@ -98,8 +100,9 @@ export default function Navbar({ transparent = false, preview = false }) {
             </div>
           </div>
         </div>
-        <MobileNavigation open={open} />
+        <MobileNavigation open={open} setShowDonate={setShowDonate} />
       </nav>
+      <DonateModal showDonate={showDonate} setShowDonate={setShowDonate} />
     </>
   );
 }
